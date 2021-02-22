@@ -7,7 +7,7 @@
 #' @param ratioThreshold
 #'
 #' @return selectNLfliterResult
-#' @example selectNLfliterResult <- selectNLfliter2(selectNLresult, intThreshold = 0.05, ratioThreshold = 0.5)
+#' @example selectNLfliterResult <- selectNLfliter2(selectNLresult, intThreshold = 0.005, ratioThreshold = 0.05)
 
 selectNLfliter2 <- function(selectNLresult,intThreshold, ratioThreshold){
   require(tcltk)
@@ -33,15 +33,15 @@ selectNLfliter2 <- function(selectNLresult,intThreshold, ratioThreshold){
     }
     else if (scanFreqi>1){
       NLFrequency <- as.data.frame(table(as.character(selectNLresult$neutralLoss[scanNumiPosition])))
-      NLFrequency <- NLFrequency[order(NLFrequency$Var1,decreasing = TRUE),]
+      NLFrequency <- NLFrequency[sort(as.numeric(as.character(NLFrequency$Var1))*-1,index.return=TRUE)$ix,]
       if (nrow(NLFrequency)==1){
         selectNLresult[scanNumiPosition, ]$lable <- 'delete'
         keepPosi <- which(selectNLresult$scanNum==scanNumi &
                           selectNLresult$neutralLoss==as.character(NLFrequency$Var1[1]) &
-                          as.character(selectNLresult$intensity) >= intThreshold &
+                          as.numeric(as.character(selectNLresult$intensity)) >= intThreshold &
                           1/selectNLresult$numOfSugar >= ratioThreshold)
         if (length(keepPosi)==1){
-          selectNLresult[keepPosi, ]$lable <- 'Only find biggest NL and the biggest NL matched mutiple results but only one has intensity exceeding the threshold '
+          selectNLresult[keepPosi, ]$lable <- 'Only find biggest NL and the biggest NL matched mutiple results but only one has intensity exceeding the threshold'
         }
         else if (length(keepPosi) > 1){
           selectNLresult[keepPosi, ]$lable <- 'Only find biggest NL and the biggest NL matched mutiple results'
@@ -53,39 +53,43 @@ selectNLfliter2 <- function(selectNLresult,intThreshold, ratioThreshold){
           NLFreq <- NLFrequency$Freq[j]
           keepPosi <- which(selectNLresult$scanNum==scanNumi &
                             selectNLresult$neutralLoss==as.character(NLVar1) &
-                            as.character(selectNLresult$intensity) >= intThreshold)
+                            as.numeric(as.character(selectNLresult$intensity)) >= intThreshold)
           deletePosi <- which(selectNLresult$scanNum==scanNumi &
                               selectNLresult$neutralLoss==as.character(NLVar1) &
-                              as.character(selectNLresult$intensity) < intThreshold)
+                              as.numeric(as.character(selectNLresult$intensity)) < intThreshold)
           if (length(keepPosi)==1){
-            selectNLresult[keepPosi,]$lable <- 'The only biggest NL'
+            selectNLresult[keepPosi,]$lable <- 'delete'
             biggestNL <- selectNLresult[keepPosi,]
             sugarSubtraction <- as.matrix(subtractionOfDataframe(df1 = selectNLresult[,sugarStart:sugarEnd], df2row = biggestNL[,sugarStart:sugarEnd]))
             keepPosiLittleNL <- which(selectNLresult$scanNum==scanNumi &
-                                      as.character(selectNLresult$neutralLoss) < as.character(biggestNL$neutralLoss) &
+                                      as.numeric(as.character(selectNLresult$neutralLoss)) < as.numeric(as.character(biggestNL$neutralLoss)) &
                                       as.character(rowSums(sugarSubtraction)) == as.character(rowSums(abs(sugarSubtraction))))
             deletePosiLittleNL <- which(selectNLresult$scanNum==scanNumi &
-                                        as.character(selectNLresult$neutralLoss) < as.character(biggestNL$neutralLoss) &
+                                        as.numeric(as.character(selectNLresult$neutralLoss)) < as.numeric(as.character(biggestNL$neutralLoss)) &
                                         as.character(rowSums(sugarSubtraction)) != as.character(rowSums(abs(sugarSubtraction))))
 
             if (length(keepPosiLittleNL)==0 & 1/selectNLresult$numOfSugar[keepPosi] >= ratioThreshold){
               selectNLresult[keepPosi,]$lable <- 'Find the only biggest NL but no others matched to it'
+              break
             }
             else if (length(keepPosiLittleNL) > 0 & (1+length(keepPosiLittleNL))/selectNLresult$numOfSugar[keepPosi] >= ratioThreshold){
               selectNLresult[keepPosi,]$lable <- 'Find the only biggest NL and has others matched to it'
               selectNLresult[keepPosiLittleNL,]$lable <- 'NL matched to biggest NL'
+              break
             }
-            break
+            else {
+              next
+            }
           }
           else if (length(keepPosi) > 1){
-            selectNLresult[keepPosi[1],]$lable <- 'Find the only biggest NL but no others matched to it'
+            selectNLresult[keepPosi[1],]$lable <- 'delete'
             biggestNL <- selectNLresult[keepPosi[1],]
             sugarSubtraction <- as.matrix(subtractionOfDataframe(df1 = selectNLresult[,sugarStart:sugarEnd], df2row = biggestNL[,sugarStart:sugarEnd]))
             keepPosiLittleNL <- which(selectNLresult$scanNum==scanNumi &
-                                        as.character(selectNLresult$neutralLoss) < as.character(biggestNL$neutralLoss) &
+                                        as.numeric(as.character(selectNLresult$neutralLoss)) < as.numeric(as.character(biggestNL$neutralLoss)) &
                                         as.character(rowSums(sugarSubtraction)) == as.character(rowSums(abs(sugarSubtraction))))
             deletePosiLittleNL <- which(selectNLresult$scanNum==scanNumi &
-                                        as.character(selectNLresult$neutralLoss) < as.character(biggestNL$neutralLoss) &
+                                        as.numeric(as.character(selectNLresult$neutralLoss)) < as.numeric(as.character(biggestNL$neutralLoss)) &
                                         as.character(rowSums(sugarSubtraction)) != as.character(rowSums(abs(sugarSubtraction))))
 
             if (length(keepPosiLittleNL)==0 & 1/selectNLresult$numOfSugar[keepPosi[1]] >= ratioThreshold){
@@ -100,10 +104,10 @@ selectNLfliter2 <- function(selectNLresult,intThreshold, ratioThreshold){
               biggestNL <- selectNLresult[keepPosi[k],]
               sugarSubtraction <- as.matrix(subtractionOfDataframe(df1 = selectNLresult[,sugarStart:sugarEnd], df2row = biggestNL[,sugarStart:sugarEnd]))
               keepPosiLittleNLk <- which(selectNLresult$scanNum==scanNumi &
-                                          as.character(selectNLresult$neutralLoss) < as.character(biggestNL$neutralLoss) &
+                                          as.numeric(as.character(selectNLresult$neutralLoss)) < as.numeric(as.character(biggestNL$neutralLoss)) &
                                           as.character(rowSums(sugarSubtraction)) == as.character(rowSums(abs(sugarSubtraction))))
               deletePosiLittleNLk <- which(selectNLresult$scanNum==scanNumi &
-                                          as.character(selectNLresult$neutralLoss) < as.character(biggestNL$neutralLoss) &
+                                          as.numeric(as.character(selectNLresult$neutralLoss)) < as.numeric(as.character(biggestNL$neutralLoss)) &
                                           as.character(rowSums(sugarSubtraction)) != as.character(rowSums(abs(sugarSubtraction))))
               if ((1+length(keepPosiLittleNLk))/selectNLresult$numOfSugar[keepPosi[k]] >= ratioThreshold){
                 if (length(keepPosiLittleNLk) > length(keepPosiLittleNL)){

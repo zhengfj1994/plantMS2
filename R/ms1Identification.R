@@ -28,14 +28,7 @@ ms1Identification <- function(ms1ms2ConbRes, aglyconeFile, ionMode, deltaMZppm){
     setTkProgressBar(pb, i*100/nrow(ms1ms2ConbRes), sprintf("ms1Identification (%s)", info),info)
 
     if (ms1ms2ConbRes$lable[i] != 'NL matched to biggest NL'){
-      if (as.character(ms1ms2ConbRes$m.z[i])!='...'){
-        mwInMs1 <- as.numeric(as.character(ms1ms2ConbRes$m.z[i])) + addMZ
-      }
-      else if (as.character(ms1ms2ConbRes$m.z[i])=='...'){
-        mwInMs1 <- mwInMs1
-      }
-      mzOfChain <- as.numeric(as.character(ms1ms2ConbRes$mzOfChain[i]))
-      aglyconeMass <- mwInMs1-mzOfChain
+      aglyconeMass <- as.numeric(as.character(ms1ms2ConbRes$productIon[i])) + addMZ
       aglyconePosi <- which(abs(as.numeric(as.character(aglyconeData$molecular.weight)) - aglyconeMass)/aglyconeMass*1000000 < deltaMZppm)
       if (length(aglyconePosi)==0){
         ms1ms2ConbRes$Algycone[i] <- "No matched algycone"

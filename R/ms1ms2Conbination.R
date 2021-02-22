@@ -8,7 +8,7 @@
 #' @param deltaTR
 #'
 #' @return ms1ms2ConbRes
-#' @example ms1ms2ConbRes <- ms1ms2Conbination(ms1File="D:\\github\\plantMS2\\Example Data\\peak table-Features-Skeleton3.xlsx", selectNLfliterResult, deltaMZppm=20000, deltaTR=5)
+#' @example ms1ms2ConbRes <- ms1ms2Conbination(ms1File="D:\\github\\ModifiedMetMRM\\示例文件\\POS_一级峰表\\POS-TIC.txt", selectNLfliterResult, deltaMZppm=20000, deltaTR=5)
 
 ms1ms2Conbination <- function(ms1File, selectNLfliterResult, deltaMZppm, deltaTR){
   require(xlsx)

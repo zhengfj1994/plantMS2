@@ -3,11 +3,12 @@
 #' @author Fujian Zheng <zhenfj@dicp.ac.cn>
 #'
 #' @param mgfFile
+#' @param intThreshold
 #'
 #' @return precusorAndProductPair
-#' @example precusorAndProductPair <- createPrecusorProductPair(mgfFile="D:\\github\\plantMS2\\Example Data\\NEG-FullMS-ddMS2_flavoneinsilicolist1-skeleton3-SR-1.mgf")
+#' @example precusorAndProductPair <- createPrecusorProductPair(mgfFile="D:/github/plantMS2/Example Data/NEG-FullMS-ddMS2_flavoneinsilicolist1-skeleton3-SR-1.mgf", intThreshold = 0.1)
 
-createPrecusorProductPair <- function(mgfFile){
+createPrecusorProductPair <- function(mgfFile, intThreshold){
   require(tcltk)
   mgfMatrix <- createMgfMatrix(mgfFile)
   precusorAndProductPair <- mgfMatrix[0,]
@@ -41,5 +42,6 @@ createPrecusorProductPair <- function(mgfFile){
     precusorAndProductPair <- rbind(precusorAndProductPair,precusorAndProductPairi)
   }
   close(pb)
+  precusorAndProductPair <- precusorAndProductPair[which(precusorAndProductPair$intensity>intThreshold), ]
   return(precusorAndProductPair)
 }
