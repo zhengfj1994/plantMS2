@@ -1,7 +1,7 @@
 Package: plantMS2
 Type: Package
 Title: identification
-Version: 0.8.0
+Version: 0.9.0
 Author: Fujian Zheng
 Maintainer: Fujian Zheng <zhengfj@dicp.ac.cn>
 Description: More about what it does (maybe more than one line)
@@ -9,4 +9,4 @@ Description: More about what it does (maybe more than one line)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.1
+RoxygenNote: 7.1.1
