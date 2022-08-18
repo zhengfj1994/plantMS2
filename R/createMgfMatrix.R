@@ -22,7 +22,7 @@ createMgfMatrix <- function(mgfFile){
     pepmassi <- gsub("[^0-9,.]", "", strsplit(mgfData[pepmass[i]],split = " ")[[1]][1])
     mgfMatrix[i,"pepmass"] <- pepmassi
 
-    scani <- gsub("[^0-9,.]", "", str_extract_all(mgfData[scanNum[i]],"ScanNumber:([0-9]*) Charge:")[[1]])
+    scani <- gsub("[^0-9,.]", "", str_extract_all(mgfData[scanNum[i]],"scan=([0-9]*)")[[1]])
     mgfMatrix[i,"scanNum"] <- scani
 
     tri <- gsub("[^0-9,.]", "", mgfData[tr[i]])

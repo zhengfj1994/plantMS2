@@ -1,5 +1,5 @@
 #' @name createNLmatrix
-#' @description Creat a matrix containing theoretical neutral loss. 
+#' @description Creat a matrix containing theoretical neutral loss.
 #' @author Fujian Zheng <zhengfj@dicp.ac.cn>
 #'
 #' @param sugarFile, a xlsx file containing the information od sugars, the first column is 'name', the second column is 'foluma' and the third is 'molecular weight'.
@@ -10,8 +10,8 @@
 
 createNLmatrix <- function(sugarFile, numOfSugar){
   require(gtools)
-  require(xlsx)
-  sugarsInFile <- read.xlsx2(sugarFile,sheetIndex=1)
+  require(openxlsx)
+  sugarsInFile <- openxlsx::read.xlsx(xlsxFile =  sugarFile, sheet = 1)
   nrowOfSugar <- nrow(sugarsInFile)
   NLmatrix <- as.data.frame(permutations(n = numOfSugar+1, r = 1, v = 0:numOfSugar, repeats.allowed = TRUE))
   NLmatrix$rowsum <- apply(NLmatrix,1,sum)

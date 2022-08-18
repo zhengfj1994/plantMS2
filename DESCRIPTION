@@ -1,7 +1,7 @@
 Package: plantMS2
 Type: Package
 Title: identification
-Version: 0.9.0
+Version: 1.0.0
 Author: Fujian Zheng
 Maintainer: Fujian Zheng <zhengfj@dicp.ac.cn>
 Description: More about what it does (maybe more than one line)

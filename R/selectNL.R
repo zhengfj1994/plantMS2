@@ -11,8 +11,8 @@
 
 selectNL <- function(sugarFile,precusorAndProductPair,NLmatrix,deltaMZppm,ionMode){
   require(tcltk)
-  require(xlsx)
-  sugarsInFile <- read.xlsx2(sugarFile,sheetIndex=1)
+  require(openxlsx)
+  sugarsInFile <- read.xlsx(xlsxFile = sugarFile,sheet=1)
   acid.name <- sugarsInFile$name[which(sugarsInFile$class == "acid")]
   acid.MW <- sugarsInFile$molecular.weight[which(sugarsInFile$class == "acid")]
 
